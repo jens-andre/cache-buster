@@ -20,15 +20,13 @@ Create a configuration file named `.cache-buster.json`
   "source": "Public/assets/**/*",
   "target": "{Public/assets,Resources/Views}/**/*.{css,js,leaf}",
   "url": "https://example.com",
-  "hashLength: 7
+  "hashLength": 7
 }
 ```
 
 Provide your **`publicPath`**, the [glob patterns](https://github.com/mrmlnc/fast-glob#pattern-syntax) for the **`source`** of your compiled assets and **`target`** for your templates and/or assets. Optionaly you can provide an **`url`** and a **`hashLength`** (default is 7).
 
 In your application directory make a dry run to test it out with the following command
-
-
 
 ``` shell
 cache-buster -d
@@ -46,5 +44,3 @@ CLI Options
 ## License
 
 Released und the MIT License.
-
-
