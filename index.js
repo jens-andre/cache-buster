@@ -86,19 +86,22 @@ for (let filePath of glob.sync(config.source)) {
   const parsedPath = path.parse(filePath)
   let original = filePath.replace(config.publicPath, '')
 
-  if (isBlank(config.url)) {
-    const dir = parsedPath.dir.replace(config.publicPath, '')
-    original = dir.substring(dir.lastIndexOf('/') + 1).concat('/', parsedPath.base).replace(/^\/+/, '')
-  }
-
   const hash = createHash('sha256').update(fs.readFileSync(filePath))
     .digest('hex')
     .slice(0, config.hashLength)
+
   const hashed = original.replace(parsedPath.ext, '.'.concat(hash, parsedPath.ext))
-  manifest[original] = isBlank(config.url) ? hashed : config.url + hashed
+
+  if (!isBlank(config.url)) {
+    manifest[original] = config.url + hashed
+  } else {
+    const dir = parsedPath.dir.replace(config.publicPath, '')
+    let original = dir.substring(dir.lastIndexOf('/') + 1).concat('/', parsedPath.base).replace(/^\/+/, '')
+    manifest[original] = original.replace(parsedPath.ext, '.'.concat(hash, parsedPath.ext))
+  }
 
   if (!argv.dry) {
-    fs.renameSync(filePath, config.publicPath.concat('/', hashed))
+    fs.renameSync(filePath, config.publicPath.concat('/', hashed.replace(/^\/+/, '')))
   }
 }
 
